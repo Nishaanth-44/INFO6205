@@ -35,20 +35,35 @@ public class ThreeSumBenchmark {
     private void benchmarkThreeSum(final String description, final Consumer<int[]> function, int n, final TimeLogger[] timeLoggers) {
         if (description.equals("ThreeSumCubic") && n > 4000) return;
         // FIXME
+        
+        double totalTime = 0;
+        double avgTime;
+        for(int i=0;i<runs;i++) {
+        	double startTime = System.currentTimeMillis();
+        	function.accept(supplier.get());
+        	double endTime = System.currentTimeMillis();
+        	double timeTaken = endTime-startTime;
+        	totalTime = totalTime+timeTaken;
+        }
+        
+        avgTime = totalTime/runs;
+        
+        timeLoggers[0].log(avgTime, n);
+        timeLoggers[1].log(avgTime, n);
         // END 
     }
 
     private final static TimeLogger[] timeLoggersCubic = {
-            new TimeLogger("Raw time per run (mSec): ", (time, n) -> time),
-            new TimeLogger("Normalized time per run (n^3): ", (time, n) -> time / n / n / n * 1e6)
+            new TimeLogger("(Cubic) Raw time per run (mSec): ", (time, n) -> time),
+            new TimeLogger("(Cubic) Normalized time per run (n^3): ", (time, n) -> time / n / n / n * 1e6)
     };
     private final static TimeLogger[] timeLoggersQuadrithmic = {
-            new TimeLogger("Raw time per run (mSec): ", (time, n) -> time),
-            new TimeLogger("Normalized time per run (n^2 log n): ", (time, n) -> time / n / n / Utilities.lg(n) * 1e6)
+            new TimeLogger("(Quadrithmic) Raw time per run (mSec): ", (time, n) -> time),
+            new TimeLogger("(Quadrithmic) Normalized time per run (n^2 log n): ", (time, n) -> time / n / n / Utilities.lg(n) * 1e6)
     };
     private final static TimeLogger[] timeLoggersQuadratic = {
-            new TimeLogger("Raw time per run (mSec): ", (time, n) -> time),
-            new TimeLogger("Normalized time per run (n^2): ", (time, n) -> time / n / n * 1e6)
+            new TimeLogger("(Quadratic) Raw time per run (mSec): ", (time, n) -> time),
+            new TimeLogger("(Quadratic) Normalized time per run (n^2): ", (time, n) -> time / n / n * 1e6)
     };
 
     private final int runs;
